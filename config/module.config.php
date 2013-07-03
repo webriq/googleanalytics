@@ -24,7 +24,7 @@ return array(
                     'textDomain'    => 'google',
                     'elements'      => array(
                         'id'        => array(
-                            'key'   => 'modules.GoogleAnalytics.access.analyticsId',
+                            'key'   => 'modules.Grid\GoogleAnalytics.access.analyticsId',
                             'type'  => 'ini',
                         ),
                     ),

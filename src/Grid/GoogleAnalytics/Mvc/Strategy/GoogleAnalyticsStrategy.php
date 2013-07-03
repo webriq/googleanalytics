@@ -15,11 +15,11 @@ use Zend\View\Model\ViewModel;
 
 class GoogleAnalyticsStrategy implements ListenerAggregateInterface
 {
+
     /**
      * @var \Zend\Stdlib\CallbackHandler[]
      */
     protected $listeners = array();
-
 
     /**
      * Attach the aggregate to the specified event manager
@@ -28,9 +28,13 @@ class GoogleAnalyticsStrategy implements ListenerAggregateInterface
      * @param  int $priority
      * @return void
      */
-    public function attach(EventManagerInterface $events)
+    public function attach( EventManagerInterface $events )
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'appendAnalyticsScriptToHeadScript'), -1000);
+        $this->listeners[] = $events->attach(
+            MvcEvent::EVENT_RENDER,
+            array( $this, 'appendAnalyticsScriptToHeadScript' ),
+            -1000
+        );
     }
 
     /**
@@ -39,11 +43,13 @@ class GoogleAnalyticsStrategy implements ListenerAggregateInterface
      * @param  EventManagerInterface $events
      * @return void
      */
-    public function detach(EventManagerInterface $events)
+    public function detach( EventManagerInterface $events )
     {
-        foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
-                unset($this->listeners[$index]);
+        foreach ( $this->listeners as $index => $listener )
+        {
+            if ( $events->detach( $listener ) )
+            {
+                unset( $this->listeners[$index] );
             }
         }
     }
@@ -55,29 +61,35 @@ class GoogleAnalyticsStrategy implements ListenerAggregateInterface
      * Populates the content of the response object from the view rendering
      * results.
      *
-     * @param ViewEvent $e
+     * @param ViewEvent $event
      * @return void
      */
-    public function appendAnalyticsScriptToHeadScript(MvcEvent $e)
+    public function appendAnalyticsScriptToHeadScript( MvcEvent $event )
     {
-        $app = $e->getParam('application');
-        $locator = $app->getServiceManager();
         /* @var $renderer \Zend\View\Renderer\PhpRenderer */
-        $renderer = $locator->get('Zend\View\Renderer\PhpRenderer');
-        $analyticsId = $locator->get('Configuration')
-                                    ['modules']
-                                    ['Grid\GoogleAnalytics']
-                                    ['access']
-                                    ['analyticsId'];
+        $app      = $event->getParam( 'application' );
+        $locator  = $app->getServiceManager();
+        $renderer = $locator->get( 'Zend\View\Renderer\PhpRenderer' );
+        $config   = $locator->get( 'Configuration' );
 
-        $viewModel = new ViewModel();
-        $viewModel->setVariable('analyticsId', $analyticsId);
-        $viewModel->setTemplate('grid/google-analytics/tracker');
+        if ( ! empty( $config['modules']
+                             ['Grid\GoogleAnalytics']
+                             ['access']
+                             ['analyticsId'] ) )
+        {
+            $viewModel = new ViewModel;
+            $viewModel->setTemplate( 'grid/google-analytics/tracker' );
+            $viewModel->setVariable(
+                'analyticsId',
+                $config['modules']
+                       ['Grid\GoogleAnalytics']
+                       ['access']
+                       ['analyticsId']
+            );
 
-        $headScript = $renderer->plugin('headScript');
-        $headScript->appendScript(
-            $renderer->render($viewModel)
-        );
+            $headScript = $renderer->plugin( 'headScript' );
+            $headScript->appendScript( $renderer->render( $viewModel ) );
+        }
     }
-}
 
+}
