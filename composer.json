@@ -27,7 +27,7 @@
     ],
     "support": {
         "email": "dev@megaweb.hu",
-        "source": "https://github.com/webriq/gridguyz-googleanalytics"
+        "source": "https://github.com/gridguyz/googleanalytics"
     },
     "require": {
         "php": ">=5.4",
