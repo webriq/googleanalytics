@@ -1,7 +1,7 @@
 {
-    "name": "webriq/gridguyz-googleanalytics",
+    "name": "gridguyz/googleanalytics",
     "type": "gridguyz-module",
-    "description": "GoogleAnalytics module for Gridguyz",
+    "description": "GoogleAnalytics module for Gridguyz CMS",
     "license": "CC-BY-SA-3.0",
     "keywords": [
         "gridguyz",
@@ -31,8 +31,8 @@
     },
     "require": {
         "php": ">=5.4",
-        "webriq/gridguyz-installer": "*",
-        "webriq/gridguyz-core": "*"
+        "gridguyz/module-installer": "*",
+        "gridguyz/core": "*"
     },
     "autoload": {
         "psr-0": {
