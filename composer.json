@@ -41,5 +41,10 @@
         "classmap": [
             "Module.php"
         ]
+    },
+    "extra": {
+        "modules": {
+            "Grid\\GoogleAnalytics": "Google analytics"
+        }
     }
 }
