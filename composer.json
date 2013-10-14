@@ -52,8 +52,6 @@
         "display-description": {
             "en": "If it is important for you who and where from is visiting your website, if you care about your target audience and how you can appeal to them or you want to know which of your pages are the most visited and how successful your campaign is in terms of converting visits to goals, then this package is for you.\n\nYou can admin all this from a separate admin panel."
         },
-        "modules": {
-            "Grid\\GoogleAnalytics": "Google analytics"
-        }
+        "module": "Grid\\GoogleAnalytics"
     }
 }
