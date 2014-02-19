@@ -1,0 +1,43 @@
+<?php 
+
+$script = '
+    google.load("visualization", "1", {packages:["corechart"], "language": "' . $this->locale() . '"});
+        
+    function googleAnalyticsDiagramDrawChart(dataTable) {
+        
+        var data = google.visualization.arrayToDataTable(dataTable);
+        
+        var target = new google.visualization.AreaChart(document.getElementById("googleAnalyticsDiagram"));
+        
+        target.draw(data, {
+            isStacked: true,
+            lineWidth: 3,
+            pointSize: 5,
+            legend: {position: "top"},
+            hAxis: {  /*ticks: [new Date(2014, 01, 12), new Date(2014, 01, 15), new Date(2014, 01, 18)],*/ gridlines : {color: "#FFF"} }
+        });
+    }
+        
+        
+';
+
+
+$this->headLink()->appendStylesheet( '/styles/modules/GoogleAnalytics/admin.dashboard.box.css' );
+$this->headScript()->appendFile( 'https://www.google.com/jsapi' );
+$this->headscript()->appendScript($script);
+
+$authenticateUrl = $this->authenticateUrl;
+
+?><section class="innerPanel">
+    <section id="innerPanelGoogleAnalytics">
+        <h1><?= $this->translate( 'googleAnalytics.admin.diagram.box.title' ) ?></h1>
+        <div class="innerPanelContent">
+            <div class="title" id="innerPanelGoogleAnalytics_title">&nbsp;</div>
+            <div id="googleAnalyticsDiagram"></div>
+            <div class="link"><a href="#" target="_blank" id="innerPanelGoogleAnalytics_link"><?php echo $this->translate('googleAnalytics.admin.diagram.box.linkToReport') ?></a></div>
+            <iframe src="<?php echo $authenticateUrl; ?>" style="display: none;" id="innerPanelGoogleAnalytics_iframe"></iframe>
+        </div>
+    </section>
+</section>
+
+

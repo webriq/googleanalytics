@@ -13,20 +13,39 @@ class Rpc implements CallableInterface, ServiceLocatorAwareInterface
     use ServiceLocatorAwareTrait;
     use ContainerAwareTrait;
 
-    public function getGoogleApiAuthenticationUrl($clientId, $clientSecret)
+    const SESSION_NAMESPACE = 'Grid\GoogleAnalytics\Api\AuthProcess';
+
+    const SESSION_KEY_CLIENT_ID = 'CLIENT_ID';
+
+    const SESSION_KEY_CLIENT_SECRET = 'CLIENT_SECRET';
+
+    const SESSION_KEY_ANALYITICS_ID = 'ANALYITICS_ID';
+
+    const SESSION_KEY_ADMIN_LOCALE = 'ADMIN_LOCALE';
+
+    const SESSION_KEY_ACCESS_TOKEN = 'ACCESS_TOKEN';
+
+    public function getGoogleApiAuthenticationUrl($clientId, $clientSecret, $analiticsId)
     {
-        /* @var $session array */
-        $session = $this->getSessionContainer('Grid\GoogleAnalytics\ApiSession');
+        $session = $this->getSessionContainer(self::SESSION_NAMESPACE);
         
-        $session['CLIENT_ID'] = $clientId;
-        $session['CLIENT_SECRET'] = $clientSecret;
+        $api = new Api($clientId, $clientSecret);
         
-        $api = $this->getApi($clientId, $clientSecret, $this->getRedirectBase() . '/app/admin/googleanalytics/api/callback');
+        
+        
+        $session[self::SESSION_KEY_CLIENT_ID] = $clientId;
+        $session[self::SESSION_KEY_CLIENT_SECRET] = $clientSecret;
+        $session[self::SESSION_KEY_ADMIN_LOCALE] = 'en';
+        $session[self::SESSION_KEY_ANALYITICS_ID] = $analiticsId;
+        
+        if (isset($session[$this->getTokenKey()])) {
+            $api->setAccessToken($session[$this->getTokenKey()]);
+        }
         
         if ($api->isAuthenticated()) {
             return array(
                 'action' => 'redirect',
-                'url' => $this->getRedirectBase() . '/app/en/admin/googleanalytics/api/refresh', 
+                'url' => $this->getRedirectBase() . '/app/en/admin/googleanalytics/api/refresh',
             );
         } else {
             return array(
@@ -36,27 +55,20 @@ class Rpc implements CallableInterface, ServiceLocatorAwareInterface
         }
     }
 
-    protected function getRedirectBase() {
+    protected function getRedirectBase()
+    {
         $redirectUrl = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
         $redirectUrl .= $_SERVER['HTTP_HOST'];
         
         return $redirectUrl;
     }
     
-
-    protected function getApi($clientId, $clientSecret, $redirectUrl)
+    protected function getTokenKey()
     {
-        $api = new Api();
-        $api->setClientId($clientId);
-        $api->setClientSecret($clientSecret);
-        $api->setRedirectUrl($redirectUrl);
-        $api->setApplicationName('gridguyz-google-analytics-module');
-        $api->setScopes(array(
-            'https://www.googleapis.com/auth/analytics.readonly'
-        ));
-        $api->setSessionManager($this->getServiceLocator()->get('Zend\Session\ManagerInterface'));
-        
-        return $api;
+        $session = $this->getSessionContainer(self::SESSION_NAMESPACE);
+    
+        return self::SESSION_KEY_ACCESS_TOKEN . '-' . $session[self::SESSION_KEY_CLIENT_ID] . '-' . $session[self::SESSION_KEY_CLIENT_SECRET];
     }
+    
 }
 

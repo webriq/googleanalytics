@@ -6,6 +6,13 @@ return array(
     'googleAnalytics.form.settings.description' => 'Here, you can set your <a href="http://support.google.com/analytics/bin/answer.py?answer=1032385" target="_blank">Google Analytics Tracking ID</a> (UA-XXXXX-Y or UA-XXXXX-YY).',
     'googleAnalytics.form.settings.title' => 'Google',
     
+    'googleAnalytics.admin.diagram.box.title' => 'Google Analytics',
+    'googleAnalytics.admin.diagram.data.label' => 'Visits',
+    'googleAnalytics.admin.diagram.box.linkToReport' => 'more...',    
+    
+    
+    
+    
     'googleAnalytics.form.settings.googleApi.legend' => 'Analytics Chart - Google API Credentials',
     
     'googleAnalytics.form.settings.googleApi.description' => 'Google API settings',

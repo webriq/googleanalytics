@@ -5,30 +5,54 @@ use Zork\Mvc\Controller\AbstractAdminController;
 use Zend\View\Model\ViewModel;
 use Zork\Session\ContainerAwareTrait;
 use Grid\GoogleAnalytics\Controller\AnalyticsApiTrait;
+use Grid\GoogleAnalytics\Model\Api;
 
 class GoogleApiController extends AbstractAdminController
 {
     use ContainerAwareTrait;
-    use AnalyticsApiTrait;
 
-    const ADMIN_LOCALE = 'ADMIN_LOCALE';
+    const SESSION_NAMESPACE = 'Grid\GoogleAnalytics\Api\AuthProcess';
+
+    const SESSION_KEY_CLIENT_ID = 'CLIENT_ID';
+
+    const SESSION_KEY_CLIENT_SECRET = 'CLIENT_SECRET';
+
+    const SESSION_KEY_ANALYITICS_ID = 'ANALYITICS_ID';
+
+    const SESSION_KEY_ADMIN_LOCALE = 'ADMIN_LOCALE';
+
+    const SESSION_KEY_ACCESS_TOKEN = 'ACCESS_TOKEN';
 
     public function connectAction()
     {
-        /* @var $session array */
-        $session = $this->getSessionContainer('Grid\GoogleAnalytics\ApiSession');
+        /* @var $params \Zend\Mvc\Controller\Plugin\Params */
+        $params = $this->params();
         
-        $session['ANALYITICS_ID'] = $this->params()->fromQuery('analyticsId');
+        $session = $this->getSessionContainer(self::SESSION_NAMESPACE);
         
-        $api = $this->getApi();
+        $api = new Api($params->fromQuery('clientId'), $params->fromQuery('clientSecret'));
+        
+        $session[self::SESSION_KEY_CLIENT_ID] = $params->fromQuery('clientId');
+        $session[self::SESSION_KEY_CLIENT_SECRET] = $params->fromQuery('clientSecret');
+        $session[self::SESSION_KEY_ADMIN_LOCALE] = $params->fromRoute('locale');
+        $session[self::SESSION_KEY_ANALYITICS_ID] = $params->fromQuery('analyticsId');
+        
+        if (isset($session[$this->getTokenKey()])) {
+            $api->setAccessToken($session[$this->getTokenKey()]);
+        }
         
         if ($api->isAuthenticated()) {
             return $this->redirectToRefresh();
         } else {
-            $locale = $this->params()->fromRoute('locale');
-            $this->getSessionContainer('Grid\GoogleAnalytics\ApiSession')->offsetSet(self::ADMIN_LOCALE, $locale);
             return $this->redirect()->toUrl($api->getAuthenticateUrl());
         }
+    }
+
+    protected function getTokenKey()
+    {
+        $session = $this->getSessionContainer(self::SESSION_NAMESPACE);
+        
+        return self::SESSION_KEY_ACCESS_TOKEN . '-' . $session[self::SESSION_KEY_CLIENT_ID] . '-' . $session[self::SESSION_KEY_CLIENT_SECRET];
     }
 
     public function callbackAction()
@@ -37,39 +61,45 @@ class GoogleApiController extends AbstractAdminController
         $params = $this->params();
         
         /* @var $session array */
-        $session = $this->getSessionContainer('Grid\GoogleAnalytics\ApiSession');
+        $session = $this->getSessionContainer(self::SESSION_NAMESPACE);
         
         $callbackCode = $params->fromQuery('code');
         
-        $api = $this->getApi();
+        $api = new Api($session[self::SESSION_KEY_CLIENT_ID], $session[self::SESSION_KEY_CLIENT_SECRET]);
+        
         $api->authenticate($callbackCode);
         
-        $locale = $session[self::ADMIN_LOCALE];
+        if ($api->getAccessToken()) {
+            $session[$this->getTokenKey()] = $api->getAccessToken();
+        }
         
-        return $this->redirectToRefresh($locale);
+        return $this->redirectToRefresh();
     }
 
     public function refreshAction()
     {
         /* @var $session array */
-        $session = $this->getSessionContainer('Grid\GoogleAnalytics\ApiSession');
+        $session = $this->getSessionContainer(self::SESSION_NAMESPACE);
+        
+        $api = new Api($session[self::SESSION_KEY_CLIENT_ID], $session[self::SESSION_KEY_CLIENT_SECRET]);
+        $api->setAccessToken($session[$this->getTokenKey()]);
+        
+        $profiles = $api->getProfiles($session[self::SESSION_KEY_ANALYITICS_ID]);
         
         $viewModel = new ViewModel();
         
-        $api = $this->getApi();
-        
-        $profiles = $api->getProfiles($session['ANALYITICS_ID']);
-        
         $viewModel->setVariable('profiles', $profiles);
         $viewModel->setTerminal(true);
+        
         return $viewModel;
     }
 
-    protected function redirectToRefresh($locale = null)
+    protected function redirectToRefresh()
     {
-        if (is_null($locale)) {
-            $locale = $this->params()->fromRoute('locale', null);
-        }
+        /* @var $session array */
+        $session = $this->getSessionContainer(self::SESSION_NAMESPACE);
+        
+        $locale = $session[self::SESSION_KEY_ADMIN_LOCALE];
         
         return $this->redirect()->toUrl($this->url()
             ->fromRoute('Grid\GoogleAnalytics\Admin\Api\Refresh', array(

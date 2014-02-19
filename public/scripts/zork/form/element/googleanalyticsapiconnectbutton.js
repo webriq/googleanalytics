@@ -64,6 +64,7 @@
             } ).invoke({
             	'clientId' : $('#googleAnalytics_form_settings_googleApi_clientId').val(),
             	'clientSecret' : $('#googleAnalytics_form_settings_googleApi_clientSecret').val(),
+            	'analiticsId' : $('#googleAnalytics_form_settings_analyticsId').val()
             });
 		
 		});

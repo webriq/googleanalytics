@@ -1,4 +1,5 @@
-<?php 
+<?php if ($this->enabled) :
+
 /* @var $visits \Grid\GoogleAnalytics\Model\AbstractGoogleAnalyticsApi\Result\Visits */
 $visits = $this->visits;
 
@@ -26,7 +27,7 @@ foreach ($visits->getData()['visits'] as $date => $count) {
             lineWidth: 3,
             pointSize: 5,
             legend: {position: "top"},
-            hAxis: {  /*ticks: [new Date(2014, 01, 12), new Date(2014, 01, 15), new Date(2014, 01, 18)],*/ gridlines : {color: "#FFF"} }
+            hAxis: {  ticks: [new Date(2014, 01, 12), new Date(2014, 01, 15), new Date(2014, 01, 18)], gridlines : {color: "#FFF"} }
         });
     }
 ';
@@ -47,3 +48,4 @@ $this->headscript()->appendScript($script);
         </div>
     </section>
 </section>
+<?php endif; ?>

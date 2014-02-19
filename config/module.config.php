@@ -37,12 +37,37 @@ return array(
                         'action' => 'refresh'
                     )
                 )
-            )
+            ),
+            'Grid\GoogleAnalytics\Admin\Api\Callback\Chart' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/app/admin/googleanalytics/api/callback/chart',
+                    'defaults' => array(
+                        'controller' => 'Grid\GoogleAnalytics\Controller\GoogleApiChart',
+                        'action' => 'callback'
+                    )
+                )
+            ),
+            
+            'Grid\GoogleAnalytics\Admin\Api\Refresh\Chart' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route' => '/app/:locale/admin/googleanalytics/api/refresh',
+                    'constraints' => array(
+                        'locale' => '\w+'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Grid\GoogleAnalytics\Controller\GoogleApiChart',
+                        'action' => 'refresh'
+                    )
+                )
+            ),
         )
     ),
     'controllers' => array(
         'invokables' => array(
-            'Grid\GoogleAnalytics\Controller\GoogleApi' => 'Grid\GoogleAnalytics\Controller\GoogleApiController'
+            'Grid\GoogleAnalytics\Controller\GoogleApi' => 'Grid\GoogleAnalytics\Controller\GoogleApiController',
+            'Grid\GoogleAnalytics\Controller\GoogleApiChart' => 'Grid\GoogleAnalytics\Controller\GoogleApiChartController'
         )
     ),
     'controller_plugins' => array(
@@ -102,17 +127,6 @@ return array(
                             'key' => 'modules.Grid\GoogleAnalytics.reports',
                             'type' => 'ini'
                         ),
-                        
-                        
-                        /*'adminDashboardDiagram-authorization-oauth2-clientId' => array(
-                            'key' => 'modules.Grid\GoogleAnalytics.adminDashboardDiagram.api.authorization.oauth2.clientId',
-                            'type' => 'ini'
-                        ),
-                        'adminDashboardDiagram-authorization-oauth2-clientSecret' => array(
-                            'key' => 'modules.Grid\GoogleAnalytics.adminDashboardDiagram.api.authorization.oauth2.clientSecret',
-                            'type' => 'ini'
-                        ),
-                        */
                     )
                 )
             ),
@@ -262,47 +276,6 @@ return array(
                                     )
                                 )
                             )
-                                                
-                                            
-                                        
-                                    
-                                
-                            
-                            
-                            /*'adminDashboardDiagram-authorization-type' => array(
-                                'spec' => array(
-                                    'type' => 'Zork\Form\Element\Select',
-                                    'name' => 'adminDashboardDiagram-api-authorization-type',
-                                    'options' => array(
-                                        'label' => 'googleAnalytics.form.settings.api.authorization.type',
-                                        'value_options' => array(
-                                            'OAuth' => 'googleAnalytics.form.settings.api.authorization.type.options.oauth2'
-                                        )
-                                    )
-                                )
-                            ),
-                            'clientId' => array(
-                                'spec' => array(
-                                    'type' => 'Zork\Form\Element\Text',
-                                    'name' => 'adminDashboardDiagram-authorization-oauth2-clientId',
-                                    'attributes' => array(
-                                        'class' => 'authorization oauth2'
-                                    ),
-                                    'options' => array(
-                                        'label' => 'googleAnalytics.form.settings.authorization.oauth2.clientId.label'
-                                    )
-                                )
-                            ),
-                            'clientSecret' => array(
-                                'spec' => array(
-                                    'type' => 'Zork\Form\Element\Text',
-                                    'name' => 'adminDashboardDiagram-authorization-oauth2-clientSecret',
-                                    'options' => array(
-                                        'label' => 'googleAnalytics.form.settings.authorization.oauth2.clientSecret.label'
-                                    )
-                                )
-                            ),
-                            )*/
                         )
                     )
                 )
@@ -315,7 +288,9 @@ return array(
                 ),
         'template_map' => array(
             'grid/google-analytics/tracker' => __DIR__ . '/../view/grid/google-analytics/tracker.js',
-            'grid/google-analytics/dashboard' => __DIR__ . '/../view/grid/google-analytics/dashboard.phtml'
+            'grid/google-analytics/dashboard' => __DIR__ . '/../view/grid/google-analytics/dashboard.phtml',
+            'grid/google-analytics/dashboard-empty' => __DIR__ . '/../view/grid/google-analytics/dashboard-empty.phtml',
+            'grid/google-analytics/dashboard-auth' => __DIR__ . '/../view/grid/google-analytics/dashboard-auth.phtml',
         ),
         'template_path_stack'       => array(
             __DIR__ . '/../view',
