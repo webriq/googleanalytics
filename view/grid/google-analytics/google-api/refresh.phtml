@@ -1,0 +1,54 @@
+<script type="text/javascript">
+
+var parentWindow = null;
+
+if (window.opener) {
+	parentWindow = window.opener; 
+} else if (parent) {
+	parentWindow = parent;
+}
+
+
+var reportSelect = parentWindow.document.getElementById('googleAnalytics_form_settings_dashboardDiagram_report');
+var originalValue = reportSelect.value;
+
+var length = reportSelect.options.length;
+
+for (var i = 0; i < length; i++) {
+	reportSelect.options[0] = null;
+}
+
+var index = 0;
+
+<?php foreach ($this->profiles as $id => $name) : ?>
+
+var option = parentWindow.document.createElement("option");
+option.text = "<?php echo $name; ?>";
+option.value = "<?php echo $id; ?>";
+reportSelect.add(option);
+
+
+
+if ("<?php echo $id; ?>" == originalValue) {
+	reportSelect.selectedIndex = index;	
+}
+
+++index;
+
+<?php endforeach; ?>
+
+var reportsField = parentWindow.document.getElementById('googleAnalytics_form_settings_reports');
+reportsField.value = '<?php echo json_encode($this->profiles ); ?>';
+
+if (window.opener) {
+	window.close(); 
+} else if (parent) {
+	var element = parent.document.getElementById("googleAnalytics_form_settings_googleApi_connect");
+	element.disabled = null;
+	var element = parent.document.getElementById("googleAnalytics_form_settings_googleApi_connect_iframe");
+	element.parentNode.removeChild(element);
+}
+
+</script>
+
+HI
