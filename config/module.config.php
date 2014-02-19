@@ -52,7 +52,7 @@ return array(
             'Grid\GoogleAnalytics\Admin\Api\Refresh\Chart' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/app/:locale/admin/googleanalytics/api/refresh',
+                    'route' => '/app/:locale/admin/googleanalytics/api/refresh/chart',
                     'constraints' => array(
                         'locale' => '\w+'
                     ),
