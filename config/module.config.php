@@ -1,6 +1,11 @@
 <?php
 
 return array(
+    'controller_plugins' => array(
+        'invokables' => array(
+            'GoogleAnalyticsPlugin' => 'Grid\GoogleAnalytics\Controller\Plugin\DashboardAnalyticsPlugin',
+        ),
+    ),
     'translator' => array(
         'translation_file_patterns' => array(
             'googleAnalytics' => array(
@@ -56,6 +61,12 @@ return array(
                     ),
                 ),
             ),
+            'dashboardBoxes' => array(
+                'googleanalytics' => array(
+                    'order'         => 2,
+                    'plugin'        => 'GoogleAnalyticsPlugin',
+                ),
+            ),
         ),
         'Grid\GoogleAnalytics' => array(
             'access' => array(
@@ -99,6 +110,7 @@ return array(
         ),
         'template_map'   => array(
             'grid/google-analytics/tracker'  => __DIR__ . '/../view/grid/google-analytics/tracker.js',
+            'grid/google-analytics/admin-dashboard-plugin/empty' => __DIR__ . '/../view/grid/google-analytics/admin-dashboard-plugin/empty.phtml',
         ),
     ),
 );
