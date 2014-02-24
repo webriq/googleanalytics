@@ -32,7 +32,8 @@
     "require": {
         "php": ">=5.4",
         "gridguyz/module-installer": "*",
-        "gridguyz/core": "*"
+        "gridguyz/core": "*",
+        "google\/apiclient" : "*"
     },
     "autoload": {
         "psr-0": {

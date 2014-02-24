@@ -111,6 +111,7 @@ return array(
         'template_map'   => array(
             'grid/google-analytics/tracker'  => __DIR__ . '/../view/grid/google-analytics/tracker.js',
             'grid/google-analytics/admin-dashboard-plugin/empty' => __DIR__ . '/../view/grid/google-analytics/admin-dashboard-plugin/empty.phtml',
+            'grid/google-analytics/admin-dashboard-plugin/chart' => __DIR__ . '/../view/grid/google-analytics/admin-dashboard-plugin/chart.phtml',
         ),
     ),
 );

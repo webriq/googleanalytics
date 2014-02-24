@@ -1,0 +1,63 @@
+<?php
+
+
+$visits = $this->report['visits'];
+
+$script = '
+    google.load("visualization", "1", {packages:["corechart"], "language": "' . $this->locale() . '"});
+    google.setOnLoadCallback(googleAnalyticsDiagramDrawChart);
+
+    function googleAnalyticsDiagramDrawChart() {
+        var data = google.visualization.arrayToDataTable([
+                ["Month",   "' . $this->translate( 'googleAnalytics.adminDashboardDiagram.data.visits.label' ) . '"   ],
+';
+
+foreach ($visits as $date => $count) {
+    $datePieces = explode('-', $date);
+    $script .= '                [new Date(' . $datePieces[0] . ', ' . ($datePieces[1] - 1 ) . ', ' . $datePieces[2] . '), ' . $count . ' ],' . PHP_EOL;
+
+}
+$script .= '
+        ]);
+
+        var target = new google.visualization.AreaChart(document.getElementById("googleAnalyticsDiagram"));
+
+        target.draw(data, {
+            isStacked: true,
+            lineWidth: 3,
+            pointSize: 5,
+            legend: {position: "top"},
+            hAxis: { gridlines : {color: "#FFF"} }
+        });
+    }
+';
+
+
+$this->headLink()->appendStylesheet( '/styles/modules/GoogleAnalytics/admin.dashboard.box.css' );
+$this->headScript()->appendFile( 'https://www.google.com/jsapi' );
+$this->headscript()->appendScript($script);
+
+
+$title = $this->report['profile']['name'];
+
+$linkToProfile = 'https://www.google.com/analytics/web/#report/visitors-overview/a' . 
+                  $this->report['profile']['accountId'] . 
+                  'w' . 
+                  $this->report['profile']['webPropertyId'] . 
+                  'p' . 
+                  $this->report['profile']['profileId'] . '/';
+
+?>
+<section class="innerPanel">
+    <section id="innerPanelGoogleAnalytics">
+        <h1><?= $this->translate( 'googleAnalytics.adminDashboardDiagram.box.title' ) ?></h1>
+        <div class="innerPanelContent">
+            <div class="title"><?php echo $title ?></div>
+            <div id="googleAnalyticsDiagram"></div>
+            <div class="link">
+                <a href="<?php echo $linkToProfile; ?>" target="_blank">
+                <?php echo $this->translate('googleAnalytics.adminDashboardDiagram.box.linkToReport.text') ?></a>
+            </div>
+        </div>
+    </section>
+</section>
