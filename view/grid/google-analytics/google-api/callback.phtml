@@ -1,0 +1,95 @@
+<?php
+
+
+if (isset($this->errorMessage)) {
+    
+    ?>
+        <script type="text/javascript">
+
+            var parentWindow = window.opener;    
+        
+            parentWindow.js.require( "js.ui.message" );
+        
+            parentWindow.js.ui.message( {
+                "title": parentWindow.js.core.translate( "googleAnalytics.callback.error.title" ),
+                "message": parentWindow.js.core.translate( "<?php echo $this->errorMessage; ?>" )
+            } );
+        
+            window.close(); 
+    
+        </script>
+        
+    <?php 
+    
+    return;
+}
+
+
+$accessToken = $this->accessToken;
+$avalilableProfiles = $this->avalilableProfiles;
+
+$avalilableProfilesArray = array();
+
+foreach ($avalilableProfiles as $profile) {
+    /* @var $profile \Google_Service_Analytics_Profile */
+
+    $avalilableProfilesArray[$profile->getId()] = $profile->getName();
+}
+
+?>
+
+
+<script type="text/javascript">
+
+
+var parentWindow = window.opener;
+
+var accessTokenInput        = parentWindow.document.getElementById('googleAnalytics_form_settings_googleApi_accessToken');
+var avalilableProfilesInput = parentWindow.document.getElementById('googleAnalytics_form_settings_dashboardChart_avalilableProfiles');
+var profileIdSelect         = parentWindow.document.getElementById('googleAnalytics_form_settings_dashboardChart_profileId');
+
+var profileIdSelectOriginalValue = profileIdSelect.value;
+
+
+
+accessTokenInput       .value = '<?php echo $accessToken ?>';
+avalilableProfilesInput.value = '<?php echo json_encode($avalilableProfilesArray) ?>';
+
+
+var length = profileIdSelect.options.length;
+
+for (var i = 0; i < length; i++) {
+	profileIdSelect.options[0] = null;
+}
+
+var index = 0;
+
+<?php foreach ($avalilableProfilesArray as $id => $name) : ?>
+
+var option = parentWindow.document.createElement("option");
+option.text = "<?php echo $name; ?>";
+option.value = "<?php echo $id; ?>";
+profileIdSelect.add(option);
+
+
+
+if ("<?php echo $id; ?>" == profileIdSelectOriginalValue) {
+	profileIdSelect.selectedIndex = index;	
+}
+
+++index;
+
+<?php endforeach; ?>
+
+
+
+parentWindow.js.require( "js.ui.message" );
+
+parentWindow.js.ui.message( {
+    "title": parentWindow.js.core.translate( "googleAnalytics.callback.success.title" ),
+    "message": parentWindow.js.core.translate( "googleAnalytics.callback.success.message" )
+} );
+
+window.close(); 
+
+</script>

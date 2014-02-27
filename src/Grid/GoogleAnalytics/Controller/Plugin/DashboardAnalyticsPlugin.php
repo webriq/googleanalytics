@@ -5,7 +5,6 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zork\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\View\Model\ViewModel;
-use Grid\GoogleAnalytics\Model\GoogleApi\Auth\Oauth2;
 use Grid\GoogleAnalytics\Model\GoogleApi;
 
 class DashboardAnalyticsPlugin extends AbstractPlugin implements ServiceLocatorAwareInterface
@@ -29,9 +28,9 @@ class DashboardAnalyticsPlugin extends AbstractPlugin implements ServiceLocatorA
         if ( isset($config['googleApi']['clientId']) &&
              isset($config['googleApi']['clientSecret']) &&
              isset($config['googleApi']['accessToken']) &&
-             isset($config['dashboardDiagram']['profileId']) &&
-             isset($config['dashboardDiagram']['enabled']) &&
-             $config['dashboardDiagram']['enabled']
+             isset($config['dashboardChart']['profileId']) &&
+             isset($config['dashboardChart']['enabled']) &&
+             $config['dashboardChart']['enabled']
         )
         {
             $api = new GoogleApi();
@@ -40,7 +39,7 @@ class DashboardAnalyticsPlugin extends AbstractPlugin implements ServiceLocatorA
             $api->getClient()->setAccessToken($config['googleApi']['accessToken']);
             
             $report = $api->getVisits(
-                $config['dashboardDiagram']['profileId'],
+                $config['dashboardChart']['profileId'],
                 date('Y-m-d', time() - 7 * 24 * 3600),
                 date('Y-m-d', time() - 1 * 24 * 3600)
             );
