@@ -23,7 +23,7 @@ class GoogleApi extends AnalyticsApi
         
         $this->getClient()->setRedirectUri($redirectUri);
         $this->getClient()->setAccessType('offline');
-        //$this->getClient()->setApprovalPrompt('force');
+        $this->getClient()->setApprovalPrompt('force');
         $this->getClient()->setApplicationName(static::GOOGLE_API_APPLICATION_NAME);
     }
 }
