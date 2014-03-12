@@ -27,8 +27,10 @@ $script .= '
             lineWidth: 3,
             pointSize: 5,
             legend: {position: "top"},
-            hAxis: { gridlines : {color: "#FFF"} }
+            hAxis: { gridlines : {color: "#F5F6F9"} },
+            backgroundColor: "#F5F6F9"
         });
+
     }
 ';
 
@@ -48,16 +50,21 @@ $linkToProfile = 'https://www.google.com/analytics/web/#report/visitors-overview
                   $this->report['profile']['profileId'] . '/';
 
 ?>
+
+
+
 <section class="innerPanel">
     <section id="innerPanelGoogleAnalytics">
         <h1><?= $this->translate( 'googleAnalytics.adminDashboardDiagram.box.title' ) ?></h1>
         <div class="innerPanelContent">
             <div class="title"><?php echo $title ?></div>
             <div id="googleAnalyticsDiagram"></div>
-            <div class="link">
-                <a href="<?php echo $linkToProfile; ?>" target="_blank">
-                <?php echo $this->translate('googleAnalytics.adminDashboardDiagram.box.linkToReport.text') ?></a>
-            </div>
+            <div id="visualization"></div>
+        </div>
+        <div class="more-links">
+            <a href="<?php echo $linkToProfile; ?>" target="_blank" class="button-appearance">
+                <?php echo $this->translate('googleAnalytics.adminDashboardDiagram.box.linkToReport.text') ?>            
+            </a>
         </div>
     </section>
 </section>
