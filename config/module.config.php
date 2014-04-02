@@ -201,8 +201,8 @@ return array(
                                     ),
                                     'attributes' => array(
                                         'data-js-type' => 'js.form.element.googleAnalyticsApiConnectButton',
-                                        'data-protocol' => (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://",
-                                        'data-http-host' => $_SERVER['HTTP_HOST'],
+                                        'data-protocol' => ( ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || ( isset( $_SERVER['SERVER_PORT'] ) && $_SERVER['SERVER_PORT'] == 443 ) ) ? "https://" : "http://",
+                                        'data-http-host' => isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : ( isset( $_SERVER['SERVER_NAME'] ) ? $_SERVER['SERVER_NAME'] : 'localhost' ),
                                         'id' => 'googleAnalytics_form_settings_googleApi_connect'
                                     )
                                 )
