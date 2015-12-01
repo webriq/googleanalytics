@@ -2,7 +2,7 @@
     "name": "webriqcms/googleanalytics",
     "type": "webriqcms-module",
     "description": "GoogleAnalytics module for WebriQ CMS",
-    "license": "BSD-3-Clause"
+    "license": "BSD-3-Clause",
     "keywords": [
         "webriqcms",
         "module",
